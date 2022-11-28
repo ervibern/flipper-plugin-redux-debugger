@@ -151,6 +151,7 @@ export function Component() {
   const rows = useMemoize((actions) => createRows(actions), [actions]);
 
   const selectedData = actions.find((act) => act.id === selectedId);
+  const latestData = actions[actions.length - 1];
   return (
     <>
       <Panel title="Dispatch Action to the app" gap pad>
@@ -178,12 +179,14 @@ export function Component() {
         }}
         extraActions={<Button onClick={instance.clearAction}>Clear</Button>}
       />
-      <DetailSidebar width={400}>{renderSidebar(selectedData)}</DetailSidebar>
+      <DetailSidebar width={400}>
+        {renderSidebar(selectedData, latestData)}
+      </DetailSidebar>
     </>
   );
 }
 
-function renderSidebar(selectedData: ActionState) {
+function renderSidebar(selectedData: ActionState, latestData: ActionState) {
   if (!selectedData) {
     return;
   }
@@ -218,6 +221,13 @@ function renderSidebar(selectedData: ActionState) {
               data={selectedData.after}
               collapsed={true}
               expandRoot={false}
+            ></DataInspector>
+          </Tab>
+          <Tab tab="Latest State" tabKey="LatestState">
+            <DataInspector
+              data={latestData.after}
+              collapsed={false}
+              expandRoot={true}
             ></DataInspector>
           </Tab>
         </Tabs>
